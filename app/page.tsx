@@ -1,7 +1,10 @@
 "use client"
 import React, { useEffect, useState } from 'react';
+import { FaPlus } from "react-icons/fa6";
 import { Instagram, ExternalLink, Heart, ShoppingBag, Palette } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { TbEdit } from "react-icons/tb";
+import { FaEye } from "react-icons/fa";
 interface Product {
   id: number;
   name: string;
@@ -93,7 +96,7 @@ function Home() {
   const [currentTheme, setCurrentTheme] = useState<string>(gradientThemes[0].id);
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
   const { data: session } = useSession();
-
+const  [EditMode, setEditMode] = useState(false)
   useEffect(() => {
 
   console.log(session?.user?.name);
@@ -113,9 +116,10 @@ function Home() {
           <div className="relative">
             <button
               onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
-              className="bg-white/95 backdrop-blur-sm p-2 rounded-lg shadow-md hover:shadow-lg transition-all hover:scale-110 active:scale-95"
+              className=" flex item-center gap-3 text-gray-600 md:text-xl bg-white/95 backdrop-blur-sm p-2 rounded-lg shadow-md hover:shadow-lg transition-all hover:scale-110 active:scale-95"
             >
-              <Palette size={20} className="text-gray-600" />
+              Theme
+              <Palette size={30} className="text-gray-600" />
             </button>
             
             {isThemeMenuOpen && (
@@ -136,6 +140,19 @@ function Home() {
                 ))}
               </div>
             )}
+          </div>
+        </div>
+        <div className="absolute top-4  left-4">
+          <div className="relative">
+            <button
+            onClick={()=>{setEditMode(EditMode=>!EditMode)}}
+            
+              className="bg-white/95 backdrop-blur-sm p-2 rounded-lg shadow-md hover:shadow-lg transition-all hover:scale-110 active:scale-95"
+            >
+             {EditMode?<div  className='flex items-center gap-3 md:text-xl text-gray-600'>Edit <TbEdit></TbEdit></div>:<div className='flex items-center gap-3 md:text-xl text-gray-600' >View <FaEye></FaEye></div>}
+            </button>
+            
+            
           </div>
         </div>
 
@@ -160,6 +177,20 @@ function Home() {
           <p className="text-white/90 mt-2">Fashion & Lifestyle Influencer</p>
           <p className="text-sm text-white/80 mt-1">Shop my favorite products! ✨</p>
         </div>
+
+        {true && (
+          <button
+            // onClick={() => {
+            //   setEditingLink(null);
+            //   setNewLink({ title: '', description: '', link: '', category: '', image: '' });
+            //   setIsModalOpen(true);
+            // }}
+            className="w-full mb-6 flex items-center justify-center gap-2 bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors"
+          >
+        <FaPlus size={20} />
+            Add New Link
+          </button>
+        )}
 
         {/* Product Links */}
         <div className="space-y-4">
