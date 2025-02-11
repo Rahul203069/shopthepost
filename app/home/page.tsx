@@ -97,7 +97,7 @@ export default function Page() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6">
+              <div className="grid grid-cols-3 gap-2 sm:gap-6 mb-6 ">
                 <div className="bg-white/60 backdrop-blur-sm rounded-xl p-3 sm:p-4 shadow-sm">
                   <p className="text-xs sm:text-sm text-gray-500 mb-1">Views</p>
                   <p className={`text-lg sm:text-xl font-semibold ${page.accentColor}`}>
