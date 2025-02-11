@@ -4,7 +4,7 @@ import { FaCross, FaImage, FaPlus } from "react-icons/fa6";
 import { Instagram, ExternalLink, Heart, ShoppingBag, Palette } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { TbEdit } from "react-icons/tb";
-import { FaEye, FaSave } from "react-icons/fa";
+import { FaEye, FaFileUpload, FaSave } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 interface Product {
   id: number|null;
@@ -291,8 +291,26 @@ const handleSaveEdit = () => {
               rel="noopener noreferrer"
               className="block group"
             >
-              <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md overflow-hidden transition-all hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
-                <div className="flex items-center p-3 sm:p-4">
+              <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md overflow-hidden transition-all relative hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+              
+              {true && (
+                <>
+                  <button
+                    onClick={() => {console.log('Delete')}}
+                    className="absolute  top-2 right-2 z-50 p-1 rounded-full  text-red-500  transition-opacity bg-red-200"
+                  >
+                    <IoMdClose size={16} />
+                  </button>
+                  <button
+                    onClick={(e) => { e.preventDefault(); setisModalOpen(true);}}
+                    className="absolute top-2 right-10 z-50 p-1 rounded-full bg-blue-100 text-blue-500 "
+                  >
+                    <TbEdit size={16} />
+                  </button>
+                </>
+              )}
+
+                <div className="flex items-center p-1 sm:p-4">
                   <img
                     src={product.image}
                     alt={product.name}
@@ -301,13 +319,16 @@ const handleSaveEdit = () => {
                   <div className="ml-4 flex-1">
                     <div className="flex items-center justify-between">
                       <h3 className="font-semibold text-gray-900">{product.name}</h3>
-                      <span className="text-pink-500 font-semibold">{product.price}</span>
+                      <span className="text-pink-500 font-semibold">  
+
+                        {/* putprice here */}
+                      </span>
                     </div>
                     <p className="text-sm text-gray-600 mt-1">{product.description}</p>
                   </div>
                   <div className="ml-4">
-                    <div className="bg-gradient-to-br from-pink-400 to-purple-500 text-white p-2 rounded-lg group-hover:scale-110 transition-transform">
-                      <ShoppingBag size={20} />
+                    <div className=" ">
+                      {/* put linlke logo */}
                     </div>
                   </div>
                 </div>
@@ -387,8 +408,8 @@ const handleSaveEdit = () => {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Image URL
+                  <label className="block text-sm text-gray-600 mb-1">
+                   Option 1: Image URL
                   </label>
                   <div className="flex gap-2">
                     <input
@@ -413,6 +434,55 @@ const handleSaveEdit = () => {
                     </div>
                   </div>
                 </div>
+
+
+
+ {/* File Upload */}
+ <div>
+                      <label className="block text-sm text-gray-600 mb-1">
+                        Option 2: Upload from Device
+                      </label>
+                     
+                    </div>
+
+
+
+                         {/* Image Preview */}
+                         <div className="mt-4">
+                      <label className="block text-sm text-gray-600 mb-2"></label>
+                      <div className="w-full h-40 border rounded-lg overflow-hidden bg-gray-50">
+                        {newLink.image ? (
+                          <img
+                            src={newLink.image}
+                            alt="Preview"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex flex-col items-center justify-center relative text-gray-400">
+                          <FaImage size={32} />
+                          <div>Click to upload</div>
+                          <input 
+                            type="file" 
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                         
+                          />
+                          
+                        </div>
+                        )}
+                      </div>
+                      {newLink.image && (
+                        <button
+                          onClick={() => setNewLink({ ...newLink, image: '' })}
+                          className="mt-2 text-sm text-red-500 hover:text-red-600"
+                        >
+                          Remove Image
+                        </button>
+                      )}
+                    </div>
+            
+
+
+
                 <button
                   onClick={editingLink ? handleSaveEdit : handleAddLink}
                   className="w-full flex items-center justify-center gap-2 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors"
@@ -424,6 +494,9 @@ const handleSaveEdit = () => {
             </div>
           </div>
         )}
+
+
+
 
 
 
