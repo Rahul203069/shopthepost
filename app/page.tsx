@@ -1,12 +1,13 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { FaPlus } from "react-icons/fa6";
+import { FaCross, FaImage, FaPlus } from "react-icons/fa6";
 import { Instagram, ExternalLink, Heart, ShoppingBag, Palette } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { TbEdit } from "react-icons/tb";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaSave } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 interface Product {
-  id: number;
+  id: number|null;
   name: string;
   description: string;
   price: string;
@@ -19,6 +20,25 @@ interface GradientTheme {
   name: string;
   classes: string;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const gradientThemes: GradientTheme[] = [
   {
@@ -96,13 +116,70 @@ function Home() {
   const [currentTheme, setCurrentTheme] = useState<string>(gradientThemes[0].id);
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
   const { data: session } = useSession();
-const  [EditMode, setEditMode] = useState(false)
+const [isModalOpen, setisModalOpen] = useState(false)
+const [Links, setLinks] = useState(products)
+const [EditMode, setEditMode] = useState(false)
+const [editingLink, setEditingLink] = useState<Product|null>(null)
+const [newLink, setNewLink] = useState<Product>({id :null ,  name: '', description: '',   affiliateLink: '', image: '',price:'' })
   useEffect(() => {
 
   console.log(session?.user?.name);
 
 
 }, []);
+
+
+
+
+
+
+
+
+
+
+
+const handleAddLink = () => {
+  if (newLink.name && newLink.affiliateLink) {
+    setLinks([...Links, { ...newLink, id: Date.now() }]);
+    setNewLink({ name: '', description: '', affiliateLink: '', price: '', image: '' ,id:null});
+    setisModalOpen(false);
+  }
+};
+
+const handleDeleteLink = (id: string) => {
+  setLinks(Links.filter(link => link.id !== id));
+};
+
+const handleEditLink = (link: Product) => {
+  setEditingLink(link);
+  setNewLink(link);
+  setisModalOpen(true);
+};
+
+const handleSaveEdit = () => {
+  if (editingLink && newLink.name && newLink.affiliateLink) {
+    setLinks(Links.map(link => 
+      link.id === editingLink.id ? { ...newLink, id: link.id } : link
+    ));
+    setEditingLink(null);
+    setNewLink({ name: '', description: '', affiliateLink: '', image: '',price:'',id:null });
+    setisModalOpen(false);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const getCurrentThemeClasses = () => {
     return gradientThemes.find(theme => theme.id === currentTheme)?.classes || gradientThemes[0].classes;
@@ -119,11 +196,11 @@ const  [EditMode, setEditMode] = useState(false)
               className=" flex item-center gap-3 text-gray-600 md:text-xl bg-white/95 backdrop-blur-sm p-2 rounded-lg shadow-md hover:shadow-lg transition-all hover:scale-110 active:scale-95"
             >
               Theme
-              <Palette size={30} className="text-gray-600" />
+              <Palette  className="text-gray-600" />
             </button>
             
             {isThemeMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg overflow-hidden">
+              <div className="absolute right-0 mt-2 w-48 z-20 bg-white rounded-lg shadow-lg overflow-hidden">
                 {gradientThemes.map(theme => (
                   <button
                     key={theme.id}
@@ -140,6 +217,17 @@ const  [EditMode, setEditMode] = useState(false)
                 ))}
               </div>
             )}
+
+
+
+
+
+  {/* Gradient Picker Modal */}
+
+
+
+
+
           </div>
         </div>
         <div className="absolute top-4  left-4">
@@ -180,11 +268,11 @@ const  [EditMode, setEditMode] = useState(false)
 
         {true && (
           <button
-            // onClick={() => {
-            //   setEditingLink(null);
-            //   setNewLink({ title: '', description: '', link: '', category: '', image: '' });
-            //   setIsModalOpen(true);
-            // }}
+            onClick={() => {
+              setEditingLink(null);
+              setNewLink({ name: '', description: '', affiliateLink: '', price: '', image: '' ,id:1});
+              setisModalOpen(true);
+            }}
             className="w-full mb-6 flex items-center justify-center gap-2 bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors"
           >
         <FaPlus size={20} />
@@ -194,7 +282,7 @@ const  [EditMode, setEditMode] = useState(false)
 
         {/* Product Links */}
         <div className="space-y-4">
-          {products.map((product) => (
+          {Links.map((product) => (
             <a
               key={product.id}
               href={product.affiliateLink}
@@ -236,6 +324,111 @@ const  [EditMode, setEditMode] = useState(false)
             <p className="text-sm text-gray-600">1.2k+ Happy Customers</p>
           </div>
         </div>
+
+
+
+
+
+
+
+
+
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold text-gray-800">
+                  {editingLink ? 'Edit Link' : 'Add New Link'}
+                </h2>
+                <button
+                  onClick={() => setisModalOpen(false)}
+                  className="p-1 hover:bg-gray-100 rounded-full"
+                >
+                  <IoMdClose size={20} />
+                </button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Title
+                  </label>
+                  <input
+                    type="text"
+                    value={newLink.name}
+                    onChange={(e) => setNewLink({ ...newLink, name: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="Enter title"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Description
+                  </label>
+                  <input
+                    type="text"
+                    value={newLink.description}
+                    onChange={(e) => setNewLink({ ...newLink, description: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="Enter description"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Link
+                  </label>
+                  <input
+                    type="url"
+                    value={newLink.affiliateLink}
+                    onChange={(e) => setNewLink({ ...newLink, affiliateLink: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="https://example.com"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Image URL
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      value={newLink.image}
+                      onChange={(e) => setNewLink({ ...newLink, image: e.target.value })}
+                      className="flex-grow px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      placeholder="https://example.com/image.jpg"
+                    />
+                    <div className="flex-shrink-0 w-10 h-10 border rounded-lg overflow-hidden">
+                      {newLink.image ? (
+                        <img
+                          src={newLink.image}
+                          alt="Preview"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                          <FaImage size={20} className="text-gray-400" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={editingLink ? handleSaveEdit : handleAddLink}
+                  className="w-full flex items-center justify-center gap-2 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors"
+                >
+                  <FaSave size={20} />
+                  {editingLink ? 'Save Changes' : 'Save Link'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+
+
+
+
+        
 
         {/* Footer */}
         <footer className="mt-12 text-center text-white/70">
