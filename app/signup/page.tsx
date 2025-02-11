@@ -41,7 +41,7 @@ export default function page() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 px-4">
-      <div className="text-white absolute z-50 top-3 left-2 font-semibold text-xl px-2">
+      <div className="text-white absolute z-50 top-4 left-3 font-semibold text-2xl px-2">
         ShopThePost.me
       </div>
       <div className="w-full max-w-md bg-white/90 backdrop-blur-lg rounded-lg shadow-2xl p-6">
