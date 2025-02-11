@@ -146,9 +146,10 @@ const handleAddLink = () => {
   }
 };
 
-const handleDeleteLink = (id: string) => {
-  setLinks(Links.filter(link => link.id !== id));
-};
+// const handleDeleteLink = (id: string) => {
+//   setLinks(Links.filter(link => link.id !== id));
+// };
+
 
 const handleEditLink = (link: Product) => {
   setEditingLink(link);
