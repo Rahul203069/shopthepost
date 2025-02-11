@@ -190,7 +190,7 @@ const handleSaveEdit = () => {
     <div className={`min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] ${getCurrentThemeClasses()} py-8 px-4 transition-colors duration-500`}>
       <div className="max-w-lg mx-auto">
         {/* Theme Switcher */}
-        <div className="absolute top-4 right-4">
+      { EditMode&& <div className="absolute top-4 right-4">
           <div className="relative">
             <button
               onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
@@ -220,7 +220,7 @@ const handleSaveEdit = () => {
             )}
 
 
-
+      
 
 
   {/* Gradient Picker Modal */}
@@ -231,6 +231,7 @@ const handleSaveEdit = () => {
 
           </div>
         </div>
+}
         <div className="absolute top-4  left-4">
           <div className="relative">
             <button
@@ -238,7 +239,7 @@ const handleSaveEdit = () => {
             
               className="bg-white/95 backdrop-blur-sm p-2 rounded-lg shadow-md hover:shadow-lg transition-all hover:scale-110 active:scale-95"
             >
-             {EditMode?<div  className='flex items-center gap-3 md:text-xl text-gray-600'>Edit <TbEdit></TbEdit></div>:<div className='flex items-center gap-3 md:text-xl text-gray-600' >View <FaEye></FaEye></div>}
+             {!EditMode?<div  className='flex items-center gap-3 md:text-xl text-gray-600'>Edit <TbEdit></TbEdit></div>:<div className='flex items-center gap-3 md:text-xl text-gray-600' >View <FaEye></FaEye></div>}
             </button>
             
             
@@ -267,7 +268,7 @@ const handleSaveEdit = () => {
           <p className="text-sm text-white/80 mt-1">Shop my favorite products! ✨</p>
         </div>
 
-        {true && (
+        {EditMode && (
           <button
             onClick={() => {
               setEditingLink(null);
@@ -293,7 +294,7 @@ const handleSaveEdit = () => {
             >
               <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md overflow-hidden transition-all relative hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
               
-              {true && (
+              {EditMode&& (
                 <>
                   <button
                     onClick={() => {console.log('Delete')}}
@@ -348,7 +349,7 @@ const handleSaveEdit = () => {
         </div>
 
 
-jknkjnkjn
+
 
 
 
