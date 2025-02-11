@@ -1,37 +1,40 @@
 "use client";
 
-import {  useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { signIn, useSession } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
-import { useEffect } from "react";
+
+// Define the validation schema
 const signupSchema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+// Infer the TypeScript type from the schema
+type SignupFormData = z.infer<typeof signupSchema>;
+
 export default function SignupPage() {
+  const { data: session } = useSession();
 
-
-const{data:session}=useSession()
-
-useEffect(() => {
-
-    console.log(session?.user)
-}, []);
+  useEffect(() => {
+    console.log(session?.user);
+  }, [session]); // Added `session` to dependency array
 
   const [loading, setLoading] = useState(false);
+
+  // Correctly define form with TypeScript support
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: SignupFormData) => {
     setLoading(true);
     try {
       console.log("Signup data:", data);
@@ -44,10 +47,14 @@ useEffect(() => {
   };
 
   return (
-      <div className=" relative flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 px-4">
-        <div  className="text-white absolute z-50 top-3 left-2  font-semibold text-xl px-2"> ShopThePost.me</div>
+    <div className="relative flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 px-4">
+      <div className="text-white absolute z-50 top-3 left-2 font-semibold text-xl px-2">
+        ShopThePost.me
+      </div>
       <div className="w-full max-w-md bg-white/90 backdrop-blur-lg rounded-lg shadow-2xl p-6">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Create an Account</h2>
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
+          Create an Account
+        </h2>
 
         {/* Google Signup */}
         <button
