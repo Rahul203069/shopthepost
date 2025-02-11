@@ -7,34 +7,27 @@ import { z } from "zod";
 import { signIn, useSession } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 
-// Define the validation schema
+
 const signupSchema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-// Infer the TypeScript type from the schema
-type SignupFormData = z.infer<typeof signupSchema>;
-
-export default function page() {
+export default function SignupPage() {
   const { data: session } = useSession();
 
-  useEffect(() => {
-    console.log(session?.user);
-  }, [session]); // Added `session` to dependency array
+
 
   const [loading, setLoading] = useState(false);
-
-  // Correctly define form with TypeScript support
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignupFormData>({
+  } = useForm({
     resolver: zodResolver(signupSchema),
   });
 
-  const onSubmit = async (data: SignupFormData) => {
+  const onSubmit = async (data: any) => {
     setLoading(true);
     try {
       console.log("Signup data:", data);
@@ -84,7 +77,7 @@ export default function page() {
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
             {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              <p className="text-red-500 text-sm mt-1"></p>
             )}
           </div>
 
@@ -96,7 +89,9 @@ export default function page() {
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
             {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+
+              </p>
             )}
           </div>
 
