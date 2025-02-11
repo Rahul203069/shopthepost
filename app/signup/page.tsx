@@ -16,7 +16,7 @@ const signupSchema = z.object({
 // Infer the TypeScript type from the schema
 type SignupFormData = z.infer<typeof signupSchema>;
 
-export default function SignupPage() {
+export default function page() {
   const { data: session } = useSession();
 
   useEffect(() => {
