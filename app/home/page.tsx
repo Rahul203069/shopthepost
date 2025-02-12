@@ -10,6 +10,28 @@ import {
   Clock,
 } from "lucide-react";
 
+
+
+
+
+
+
+
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog"
+  
+
+
+
+
+
+
 const LandingPages = [
   {
     id: 1,
@@ -48,9 +70,34 @@ export default function Page() {
         <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
           Your Landing Pages
         </h1>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm sm:text-base shadow-md hover:bg-blue-700 transition">
+
+
+
+        <Dialog>
+  <DialogTrigger>   <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm sm:text-base shadow-md hover:bg-blue-700 transition">
           Create New Page
+        </button></DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Create new page</DialogTitle>
+      <DialogDescription>
+        This action cannot be undone. This will permanently delete your account
+        and remove your data from our servers.
+      </DialogDescription>
+      <div className="text-lg font-medium">Title</div>
+      <input className="border-black border p-2 rounded-xl"></input>
+      <div className="text-lg font-medium">Description</div>
+      <textarea className="border-black border p-2 rounded-xl"></textarea>
+    </DialogHeader>
+    <div>
+    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm sm:text-base shadow-md hover:bg-blue-700 transition">
+          Create 
         </button>
+    </div>
+  </DialogContent>
+</Dialog>
+
+     
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -123,10 +170,7 @@ export default function Page() {
                   <Edit2 className="h-4 w-4" />
                   <span className="text-xs sm:text-sm font-medium">Edit</span>
                 </button>
-                <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-gray-700 bg-white rounded-xl hover:bg-gray-50 shadow-sm hover:shadow transition-all duration-200">
-                  <BarChart className="h-4 w-4" />
-                  <span className="text-xs sm:text-sm font-medium">Analytics</span>
-                </button>
+               
                 <a
                   href="#"
                   className="flex items-center gap-2 px-3 sm:px-4 py-2 text-gray-700 bg-white rounded-xl hover:bg-gray-50 shadow-sm hover:shadow transition-all duration-200"
