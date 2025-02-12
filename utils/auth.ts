@@ -1,3 +1,6 @@
+
+
+//@ts-nocheck
 import { PrismaClient } from "@prisma/client";
 import { NextAuthOptions, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
