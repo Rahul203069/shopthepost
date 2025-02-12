@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
     const page = await prisma.landingPage.create({
       data: {
-        title,
+        title:title,
         discription: description,
         userId: user.id,
       },
