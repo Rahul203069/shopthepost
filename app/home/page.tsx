@@ -14,7 +14,7 @@ import {
   Settings,
 } from "lucide-react";
 
-
+import { useRouter } from "next/navigation";
 
 import axios from "axios";
 
@@ -143,7 +143,7 @@ const {data:session} = useSession()
 const [description, setdescription] = useState('')
 const [open, setopen] = useState(false)
 const [loader, setloader] = useState(false)
-
+const router = useRouter()
 const [render, setRender] = useState(0);
 useEffect(() => {
 axios.get('api/page').then((res)=>{setpages(res.data)})
@@ -257,6 +257,7 @@ axios.get('api/page').then((res)=>{setpages(res.data)})
                     <div className="flex items-center gap-1 text-xs text-gray-500">
                       <Clock className="w-3.5 h-3.5" />
                       { formatDate(page.createdAt)}
+                      {page.hashedId}
                     </div>
                   </div>
                 </div>
@@ -274,7 +275,7 @@ axios.get('api/page').then((res)=>{setpages(res.data)})
                       className={`flex items-center gap-1 px-2 py-1.5 text-gray-700 bg-white rounded-lg shadow-sm hover:shadow transition-all duration-200 group/btn`}
                     >
                       <ExternalLink className="h-3.5 w-3.5 group-hover/btn:scale-110 transition-transform" />
-                      <span className="text-xs font-medium">Visit</span>
+                      <span className="text-xs font-medium" onClick={()=>{router.push(`http://localhost:3000/${page.hashedId}`)}}>Visit</span>
                     </a>
                     <a
                       href={`/analytics/${page.id}`}

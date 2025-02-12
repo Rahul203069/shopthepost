@@ -4,6 +4,17 @@ import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/auth";
 import { create } from "domain";
+import crypto from "crypto";
+
+
+
+const hashUUID = (uuid) => {
+    const hash = crypto.createHash("md5").update(uuid).digest("hex"); 
+    return parseInt(hash.substring(0, 6), 16).toString(36).slice(0, 4);
+  };
+  
+
+
 const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
@@ -38,6 +49,11 @@ export async function POST(req: NextRequest) {
         discription: description,
         userId: user.id,
       },
+    });
+    const hashedId = hashUUID(page.id);
+    await prisma.landingPage.update({
+      where: { id: page.id },
+      data: { hashedId: hashedId.toString() },
     });
 
     return NextResponse.json(page);
