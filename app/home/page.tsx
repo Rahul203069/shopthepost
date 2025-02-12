@@ -34,7 +34,15 @@ import { Button } from "@/components/ui/button";
   
 
 
-
+function formatDate(dateInput:Date) {
+    const date = new Date(dateInput);
+  
+    // Format to "MM-DD-YY"
+    const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}-${date.getFullYear().toString().slice(2)}`;
+  
+    return formattedDate;
+  }
+  
 
 
 
@@ -67,31 +75,56 @@ const LandingPages = [
     },
     {
       id: 3,
-      title: "New Fitness Program",
-      description: "Complete workout routines and nutrition guides for achieving your fitness goals in 2024.",
-      status: "draft",
-      lastModified: "2024-03-09",
-      theme: "from-teal-500/5 to-emerald-500/5 border-l-teal-500",
-      accentColor: "text-teal-600",
-      bgGradient: "from-teal-50 to-emerald-50",
-      hoverGradient: "hover:from-teal-100 hover:to-emerald-100",
-      buttonsBg: "bg-teal-50",
-      buttonHoverBg: "hover:bg-teal-100",
+      title: "Tech Conference 2024",
+      description: "Annual technology conference featuring industry leaders and innovative workshops.",
+      status: "active",
+      lastModified: "2024-03-08",
+      theme: "from-blue-500/5 to-indigo-500/5 border-l-blue-500",
+      accentColor: "text-blue-600",
+      bgGradient: "from-blue-50 to-indigo-50",
+      hoverGradient: "hover:from-blue-100 hover:to-indigo-100",
+      buttonsBg: "bg-blue-50",
+      buttonHoverBg: "hover:bg-blue-100",
     },
     {
       id: 4,
-      title: "New Fitness Program",
-      description: "Complete workout routines and nutrition guides for achieving your fitness goals in 2024.",
+      title: "Autumn Art Exhibition",
+      description: "Curated collection of contemporary artworks from emerging artists worldwide.",
       status: "draft",
-      lastModified: "2024-03-09",
-      theme: "from-teal-500/5 to-emerald-500/5 border-l-teal-500",
-      accentColor: "text-teal-600",
-      bgGradient: "from-teal-50 to-emerald-50",
-      hoverGradient: "hover:from-teal-100 hover:to-emerald-100",
-      buttonsBg: "bg-teal-50",
-      buttonHoverBg: "hover:bg-teal-100",
+      lastModified: "2024-03-07",
+      theme: "from-amber-500/5 to-orange-500/5 border-l-amber-500",
+      accentColor: "text-amber-600",
+      bgGradient: "from-amber-50 to-orange-50",
+      hoverGradient: "hover:from-amber-100 hover:to-orange-100",
+      buttonsBg: "bg-amber-50",
+      buttonHoverBg: "hover:bg-amber-100",
     },
-
+    {
+      id: 5,
+      title: "Wellness Retreat",
+      description: "Immersive wellness experience combining meditation, yoga, and mindfulness practices.",
+      status: "active",
+      lastModified: "2024-03-06",
+      theme: "from-rose-500/5 to-pink-500/5 border-l-rose-500",
+      accentColor: "text-rose-600",
+      bgGradient: "from-rose-50 to-pink-50",
+      hoverGradient: "hover:from-rose-100 hover:to-pink-100",
+      buttonsBg: "bg-rose-50",
+      buttonHoverBg: "hover:bg-rose-100",
+    },
+    {
+      id: 6,
+      title: "Green Living Workshop",
+      description: "Learn sustainable living practices and eco-friendly lifestyle tips from experts.",
+      status: "draft",
+      lastModified: "2024-03-05",
+      theme: "from-lime-500/5 to-green-500/5 border-l-lime-500",
+      accentColor: "text-lime-600",
+      bgGradient: "from-lime-50 to-green-50",
+      hoverGradient: "hover:from-lime-100 hover:to-green-100",
+      buttonsBg: "bg-lime-50",
+      buttonHoverBg: "hover:bg-lime-100",
+    }
   ];
   
 
@@ -99,7 +132,14 @@ export default function Page() {
   const [landingPages, setLandingPages] = useState(LandingPages);
 const {data:session} = useSession()
   const [title, settitle] = useState('')
-  const [pages, setpages] = useState('')
+  interface Page {
+    id: number;
+    title: string;
+    discription: string;
+    createdAt: Date;
+  }
+  
+  const [pages, setpages] = useState<Page[]>([])
 const [description, setdescription] = useState('')
 const [open, setopen] = useState(false)
 const [loader, setloader] = useState(false)
@@ -125,11 +165,11 @@ axios.get('api/page').then((res)=>{setpages(res.data)})
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
               <div className="h-10 w-10 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center transform hover:rotate-12 transition-transform duration-300">
-                <User className="h-5 w-5 text-white" />
+                <User  className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-gray-900">John Doe</h2>
-                <p className="text-sm text-gray-500">john.doe@example.com</p>
+                <h2 className="text-lg font-semibold text-gray-900">{session?.user.name}</h2>
+                <p className="text-sm text-gray-500">{session?.user.email}</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
@@ -189,10 +229,10 @@ axios.get('api/page').then((res)=>{setpages(res.data)})
 
         {/* Landing Pages Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {LandingPages.map((page) => (
+          {pages.map((page) => (
             <div
               key={page.id}
-              className={`group rounded-xl bg-gradient-to-br ${page.bgGradient} ${page.hoverGradient} border-l-4 hover:border-l-6 transition-all duration-300 shadow-sm hover:shadow-lg transform hover:-translate-y-1`}
+              className={`group rounded-xl bg-gradient-to-br from-teal-100 hover:to-emerald-100" border-l-4 hover:border-l-6 transition-all duration-300 shadow-md `}
             >
               <div className="p-6">
                 <div className="flex flex-col gap-4 mb-6">
@@ -203,20 +243,20 @@ axios.get('api/page').then((res)=>{setpages(res.data)})
                       </h3>
                       <span
                         className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium transition-colors duration-200 ${
-                          page.status === "active"
+                          true
                             ? "bg-green-100 text-green-800 hover:bg-green-200"
                             : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                         }`}
                       >
-                        {page.status.charAt(0).toUpperCase() + page.status.slice(1)}
+                       
                       </span>
                     </div>
                     <p className="text-sm text-gray-600 leading-relaxed">
-                      {page.description}
+                      {page.discription}
                     </p>
                     <div className="flex items-center gap-1 text-xs text-gray-500">
                       <Clock className="w-3.5 h-3.5" />
-                      {page.lastModified}
+                      { formatDate(page.createdAt)}
                     </div>
                   </div>
                 </div>
@@ -224,28 +264,28 @@ axios.get('api/page').then((res)=>{setpages(res.data)})
                 <div className="flex items-center justify-between gap-1.5">
                   <div className="flex items-center gap-1.5">
                     <button 
-                      className={`flex items-center gap-1 px-2 py-1.5 text-gray-700 ${page.buttonsBg} ${page.buttonHoverBg} rounded-lg shadow-sm hover:shadow transition-all duration-200 group/btn`}
+                      className={`flex items-center gap-1 px-2 py-1.5 text-gray-700 bg-white rounded-lg shadow-sm hover:shadow transition-all duration-200 group/btn`}
                     >
                       <Edit2 className="h-3.5 w-3.5 group-hover/btn:scale-110 transition-transform" />
                       <span className="text-xs font-medium">Edit</span>
                     </button>
                     <a
                       href="#"
-                      className={`flex items-center gap-1 px-2 py-1.5 text-gray-700 ${page.buttonsBg} ${page.buttonHoverBg} rounded-lg shadow-sm hover:shadow transition-all duration-200 group/btn`}
+                      className={`flex items-center gap-1 px-2 py-1.5 text-gray-700 bg-white rounded-lg shadow-sm hover:shadow transition-all duration-200 group/btn`}
                     >
                       <ExternalLink className="h-3.5 w-3.5 group-hover/btn:scale-110 transition-transform" />
                       <span className="text-xs font-medium">Visit</span>
                     </a>
                     <a
                       href={`/analytics/${page.id}`}
-                      className={`flex items-center gap-1 px-2 py-1.5 text-gray-700 ${page.buttonsBg} ${page.buttonHoverBg} rounded-lg shadow-sm hover:shadow transition-all duration-200 group/btn`}
+                      className={`flex items-center gap-1 px-2 py-1.5 text-gray-700 bg-white rounded-lg shadow-sm hover:shadow transition-all duration-200 group/btn`}
                     >
-                   
+                   <BarChart className="h-3.5 w-3.5 group-hover/btn:scale-110 transition-transform" />
                       <span className="text-xs font-medium">Stats</span>
                     </a>
                   </div>
                   <button 
-                    className="flex items-center gap-1 px-2 py-1.5 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg shadow-sm hover:shadow transition-all duration-200 group/btn"
+                    className="flex items-center gap-1 px-2 py-1.5 text-red-600 bg-red-100 rounded-lg shadow-sm hover:shadow transition-all duration-200 group/btn"
                   >
                     <Trash2 className="h-3.5 w-3.5 group-hover/btn:scale-110 transition-transform" />
                     <span className="text-xs font-medium">Delete</span>

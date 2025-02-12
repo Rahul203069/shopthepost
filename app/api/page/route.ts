@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/auth";
+import { create } from "domain";
 const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
@@ -60,8 +61,10 @@ export async function GET(req: NextRequest) {
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
       include: {
-        landingPages: true, // Include user's landing pages
-      },
+        landingPages:{
+            orderBy:{createdAt:"desc"}
+        }, // Include user's landing pages
+      }
     });
 
     if (!user) {
