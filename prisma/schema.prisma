@@ -19,6 +19,7 @@ model User {
   id           String         @id @default(uuid())
   email        String         @unique
   name         String
+  image        String
   landingPages LandingPage[]  // One-to-Many: User → LandingPages
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
@@ -27,6 +28,7 @@ model User {
 model LandingPage {
   id          String        @id @default(uuid())
   title       String
+  discription String
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   productCards ProductCard[] // One-to-Many: LandingPage → ProductCards
@@ -34,13 +36,20 @@ model LandingPage {
   updatedAt   DateTime      @updatedAt
 }
 
+
+
+
+
+
+
+
 model ProductCard {
   id          String   @id @default(uuid())
   title       String
   description String
-  price       Decimal  @default(0.0)
+price       Decimal?  @default(0.0)   
   imageUrl    String
-  landingPage LandingPage @relation(fields: [landingPageId], references: [id], onDelete: Cascade)
+landingPage LandingPage @relation(fields: [landingPageId], references: [id], onDelete: Cascade)
   landingPageId String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
