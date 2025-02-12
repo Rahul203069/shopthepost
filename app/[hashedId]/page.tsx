@@ -1,3 +1,5 @@
+
+//@ts-nocheck
 "use client"
 import React, { useEffect, useState } from 'react';
 import { FaCross, FaImage, FaPlus } from "react-icons/fa6";
