@@ -29,6 +29,7 @@ model LandingPage {
   id          String        @id @default(uuid())
   title       String
   discription String
+
   hashedId    String?       @unique
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
@@ -48,6 +49,7 @@ model ProductCard {
   id          String   @id @default(uuid())
   title       String
   description String
+  link        String
 price       Decimal?  @default(0.0)   
   imageUrl    String
 landingPage LandingPage @relation(fields: [landingPageId], references: [id], onDelete: Cascade)
