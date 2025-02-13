@@ -267,7 +267,7 @@ axios.get('api/page').then((res)=>{setpages(res.data)})
                 <div className="flex items-center justify-between gap-1.5">
                   <div className="flex items-center gap-1.5">
                     <button 
-                    onClick={()=>{router.push(`http://localhost:3000/edit/${page.hashedId}`)}}
+                    onClick={()=>{router.push(`https://shopthepost.vercel.app/edit/${page.hashedId}`)}}
                       className={`flex items-center gap-1 px-2 py-1.5 text-gray-700 bg-white rounded-lg shadow-sm hover:shadow transition-all duration-200 group/btn`}
                     >
                       <Edit2 className="h-3.5 w-3.5 group-hover/btn:scale-110 transition-transform" />
