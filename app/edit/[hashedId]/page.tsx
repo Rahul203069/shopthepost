@@ -1,7 +1,6 @@
-
 //@ts-nocheck
-
 "use client"
+
 import React, { useEffect, useRef, useState } from 'react';
 import { FaCross, FaImage, FaPlus } from "react-icons/fa6";
 import { Instagram, ExternalLink, Heart, ShoppingBag, Palette } from 'lucide-react';
@@ -12,6 +11,20 @@ import axios from 'axios';
 import { TbEdit } from "react-icons/tb";
 import { FaEye, FaFileUpload, FaSave } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Button } from '@/components/ui/button';
+import { set } from 'react-hook-form';
+
+
+
 interface Product {
   id: number|null;
   name: string;
@@ -127,7 +140,7 @@ const [Links, setLinks] = useState(products)
 const [EditMode, setEditMode] = useState(false)
 const [editingLink, setEditingLink] = useState<Product|null>(null)
 const [newLink, setNewLink] = useState<Product>({id :null ,  name: '', description: '',   affiliateLink: '', image: '',price:'' })
- 
+ const [linkedit, setlinkedit] = useState(false)
 const [render, setrender] = useState(0)
 
 
@@ -152,7 +165,7 @@ const [image, setimage] = useState('')
 const [description, setdescription] = useState('')
 const [Loader, setLoader] = useState('')
 
-
+const [open, setopen] = useState(false)
 const [url, seturl] = useState('')
 
 
@@ -291,16 +304,45 @@ const ref = useRef<HTMLButtonElement|null>(null)
       <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md overflow-hidden transition-all relative hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
         {EditMode && (
           <>
-            <button
-              onClick={() => console.log("Delete")}
+          
+
+
+
+
+            <Dialog open={open} onOpenChange={setopen} >
+  <DialogTrigger > 
+
+
+  <div
+             
               className="absolute top-2 right-2 z-50 p-1 rounded-full text-red-500 transition-opacity bg-red-200"
             >
               <IoMdClose size={16} />
-            </button>
+            </div>
+
+  </DialogTrigger >
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Are you absolutely sure?</DialogTitle>
+      <DialogDescription>
+        This action cannot be undone. This will permanently delete your createds link.
+       
+      </DialogDescription>
+    </DialogHeader>
+    <Button onClick={()=>{ setLoader(true);axios.put('http://localhost:3000/api/product',{id:product.id}).then((res)=>{if(!res.data.error){ setLoader(false);setrender(prev=>prev+1);setopen(false);}}).catch((e)=>{console.log(e)})}} className=' w-min' variant={'destructive'}>{Loader?<div className='flex justify-center items-center' ><ClipLoader color='#FFFFF'></ClipLoader></div>:'Delete'}</Button>
+  </DialogContent>
+</Dialog>
+
             <button
               onClick={(e) => {
                 e.preventDefault();
+                settitle(product.title);
+                setdescription(product.description);
+                seturl(product.link);
+                setimage(product.imageUrl);
+              setlinkedit(true)
                 setisModalOpen(true);
+                setEditingLink(product);
               }}
               className="absolute top-2 right-10 z-50 p-1 rounded-full bg-blue-100 text-blue-500"
             >
@@ -360,7 +402,7 @@ const ref = useRef<HTMLButtonElement|null>(null)
             <div className="bg-white rounded-lg p-6 w-full max-w-md">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold text-gray-800">
-                  {editingLink ? 'Edit Link' : 'Add New Link'}
+                  {linkedit ? 'Edit Link' : 'Add New Link'}
                 </h2>
                 <button 
                   onClick={() => setisModalOpen(false)}
@@ -489,12 +531,14 @@ const ref = useRef<HTMLButtonElement|null>(null)
                         console.log(title, description, url, image);
                         setLoader(true); // Show loader while saving
                         try {
-                            await axios.post("http://localhost:3000/api/landing", {
+                          
+                          await axios.post("http://localhost:3000/api/landing", {
                                 title,
                                 description,
                                 url,
                                 image,
                                 id: hashedId,
+                                productid:editingLink?.id
                             });
                             
                             setrender(render + 1);
@@ -503,6 +547,11 @@ const ref = useRef<HTMLButtonElement|null>(null)
                         } finally {
                             setLoader(false);
                             setisModalOpen(false);
+                            settitle("");
+                            setdescription("");
+                            seturl("");
+                            setimage("");
+
                            // Hide loader after request completes
                         }
                       }

@@ -40,77 +40,35 @@ export default function page() {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 px-4">
-      <div className="text-white absolute z-50 top-4 left-3 font-semibold text-2xl px-2">
-        ShopThePost.me
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600">
+    {/* Glass card */}
+    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 w-full max-w-sm mx-4 shadow-2xl border border-white/20">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-white mb-2">Welcome to LinkFolio</h1>
+        <p className="text-white/80">Manage your affiliate links with ease</p>
       </div>
-      <div className="w-full max-w-md bg-white/90 backdrop-blur-lg rounded-lg shadow-2xl p-6">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
-          Create an Account
-        </h2>
 
-        {/* Google Signup */}
-        <button
-          onClick={() => signIn("google")}
-          className="w-full flex items-center justify-center gap-3 border border-gray-300 py-3 rounded-md text-gray-700 hover:bg-gray-100 transition-all shadow-sm hover:shadow-md"
-        >
-          <FcGoogle size={24} />
-          <span className="font-medium">Sign Up with Google</span>
-        </button>
+      {/* Google Sign In Button */}
+      <button
+        onClick={() => {signIn("google", { callbackUrl: "/" })}}
+        className="w-full bg-white hover:bg-gray-50 text-gray-800 font-semibold py-3 px-4 rounded-xl transition-colors flex items-center justify-center space-x-3 group"
+      >
+    <FcGoogle></FcGoogle>
+        <span>Continue with Google</span>
+      </button>
 
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="bg-gray-200 px-4 text-gray-500">OR</span>
-          </div>
-        </div>
-
-        {/* Email Signup */}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          <div>
-            <input
-              type="email"
-              placeholder="Email"
-              {...register("email")}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1"></p>
-            )}
-          </div>
-
-          <div>
-            <input
-              type="password"
-              placeholder="Password"
-              {...register("password")}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">
-
-              </p>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition-all shadow-md hover:shadow-lg"
-            disabled={loading}
-          >
-            {loading ? "Signing up..." : "Sign Up"}
-          </button>
-        </form>
-
-        <p className="text-center text-gray-600 text-sm mt-4">
-          Already have an account?{" "}
-          <a href="/login" className="text-blue-500 hover:underline">
-            Login here
-          </a>
-        </p>
-      </div>
+      {/* Terms */}
+      <p className="text-center text-white/60 text-sm mt-8">
+        By continuing, you agree to our{' '}
+        <a href="#" className="text-white/80 hover:text-white underline">
+          Terms of Service
+        </a>
+        {' '}and{' '}
+        <a href="#" className="text-white/80 hover:text-white underline">
+          Privacy Policy
+        </a>
+      </p>
     </div>
+  </div>
   );
 }

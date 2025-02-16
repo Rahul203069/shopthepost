@@ -29,7 +29,7 @@ model LandingPage {
   id          String        @id @default(uuid())
   title       String
   discription String
-
+theme       String?
   hashedId    String?       @unique
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String

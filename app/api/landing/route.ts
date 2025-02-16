@@ -8,8 +8,10 @@ const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   try {
-    // Extract hashedId from the URL path
-    const  hashedId  = await req.url.split("?")[1].split("=")[1];
+
+    const  url  =  req.url
+   const hashedId=url.split("?")[1].split("=")[1];
+
 console.log(hashedId,'heheheh');
     // Validate hashedId
     if (!hashedId) {
@@ -39,7 +41,7 @@ console.log(hashedId,'heheheh');
 export async function POST(req: NextRequest) {
     try {
       // Parse the request body
-      const { title, description, image, url, id } = await req.json();
+      const { title, description, image, url, id ,productid} = await req.json();
   console.log(title, description, image, url, id);
       // Get the current session
       const session = await getServerSession(authOptions);
@@ -56,6 +58,20 @@ export async function POST(req: NextRequest) {
       }
   
       // Create the product
+if(productid){
+  const product = await prisma.productCard.update({
+    where: { id: productid },
+    data: {
+      title,
+      description,
+      imageUrl: image,
+      link: url,
+    },
+  });
+
+  return NextResponse.json({ success: true, product }, { status: 200 });
+}
+
       const product = await prisma.productCard.create({
         data: {
           title,
@@ -74,3 +90,4 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error }, { status: 500 });
     }
   }
+

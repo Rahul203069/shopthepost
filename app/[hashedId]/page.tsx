@@ -2,11 +2,11 @@
 //@ts-nocheck
 import axios from "axios";
 import { Heart } from 'lucide-react';
-
+import { Instagram } from 'lucide-react';
 
 async function fetchPageData(pageId: string) {
   try {
-    const res = await axios.post(`http://localhost:3000/api/landing?pageId=${pageId}`, { pageId });
+    const res = await axios.get(`http://localhost:3000/api/landing?pageId=${pageId}`);
     return res.data;
   } catch (error) {
     console.error("Error fetching page data:", error);
@@ -45,14 +45,50 @@ export default async function Page({ params }) {
           <p className="text-white/90 mt-2">Fashion & Lifestyle Influencer</p>
           <p className="text-sm text-white/80 mt-1">Shop my favorite products! ✨</p>
         </div>
+       
 
         {/* Product Data */}
         <div className="space-y-4">
-          {data && (
-            <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg">
-              <pre className="text-gray-800 overflow-x-auto">{JSON.stringify(data, null, 2)}</pre>
+
+
+
+{data&&data.productCards.map((product) => (
+    <a
+      key={product.id}
+      href={product.affiliateLink}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block group"
+    >
+      <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-md overflow-hidden transition-all relative hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+        
+
+        <div className="flex items-center p-1 sm:p-4">
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="w-16 h-16 rounded-lg object-cover"
+          />
+          <div className="ml-4 flex-1">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-gray-900">{product.title}</h3>
+              <span className="text-pink-500 font-semibold">
+                {/* Put price here */}
+              </span>
             </div>
-          )}
+            <p className="text-sm text-gray-600 mt-1">{product.description}</p>
+          </div>
+          <div className="ml-4">
+            <div className=" ">
+              {/* Put link logo here */}
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  ))}
+
+
         </div>
 
         {/* Social Proof */}
