@@ -1,4 +1,4 @@
-//@ts-ignore
+
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession, Session } from "next-auth";
@@ -20,7 +20,7 @@ console.log(hashedId,'heheheh');
 
     // Fetch the landing page
     const page = await prisma.landingPage.findUnique({ where: { hashedId }, include: { productCards: true } });
-
+console.log(page)
     // Handle case where no page is found
     if (!page) {
       return NextResponse.json({ error: "Page not found" }, { status: 404 });
@@ -29,7 +29,7 @@ console.log(hashedId,'heheheh');
     // Return page data
     return NextResponse.json(page, { status: 200 });
   } catch (error) {
-    console.error("Error fetching page:", error);
+    console.log("Error fetching page:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   } finally {
     await prisma.$disconnect();
