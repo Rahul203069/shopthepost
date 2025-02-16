@@ -154,6 +154,7 @@ axios.get('api/page').then((res)=>{setpages(res.data)})
 
 
 
+
   const forceRerender = () => {
     setRender(prev => prev + 1);
   };
