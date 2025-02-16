@@ -35,3 +35,31 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error:e }, { status: 500 });
     }
   }
+
+
+
+  export async function POST(req: NextRequest) {
+    // Extract the page id from the URL
+    const pageid = req.url.split('=')[1];
+    
+    // Parse the request body to get the theme
+    const { theme } = await req.json();
+    
+    console.log('Page ID:', pageid);
+  
+    try {
+      // Update the landing page with the new theme
+     const the= await prisma.landingPage.update({
+        where: { hashedId: pageid },
+        data: { theme },
+      });
+      console.log(the,'hee');
+      return NextResponse.json({ success: true, the }, { status: 200 });
+    } catch (error: any) {
+      console.log('Error updating landing page:', error);
+      return NextResponse.json(
+        { success: false, error: error.message },
+        { status: 500 }
+      );
+    }
+  }

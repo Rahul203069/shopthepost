@@ -1,8 +1,8 @@
+
 //@ts-nocheck
 "use client"
-
 import React, { useEffect, useRef, useState } from 'react';
-import { FaCross, FaImage, FaPlus } from "react-icons/fa6";
+import { FaCross, FaImage, FaPlus, FaUpload } from "react-icons/fa6";
 import { Instagram, ExternalLink, Heart, ShoppingBag, Palette } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -151,7 +151,7 @@ const [render, setrender] = useState(0)
 
 const [data, setdata] = useState(null)
 useEffect(() => { 
-axios.get(`http://localhost:3000/api/landing?pageId=${hashedId}`).then((res)=>{setdata(res.data.productCards)})
+axios.get(`http://localhost:3000/api/landing?pageId=${hashedId}`).then((res)=>{ setdata(res.data)})
 
 }, [hashedId,render]);
 
@@ -163,7 +163,8 @@ axios.get(`http://localhost:3000/api/landing?pageId=${hashedId}`).then((res)=>{s
 const [title, settitle] = useState('')
 const [image, setimage] = useState('')
 const [description, setdescription] = useState('')
-const [Loader, setLoader] = useState('')
+const [Loader, setLoader] = useState(false)
+const [loader, setloader] = useState(false)
 
 const [open, setopen] = useState(false)
 const [url, seturl] = useState('')
@@ -182,12 +183,27 @@ const ref = useRef<HTMLButtonElement|null>(null)
     return gradientThemes.find(theme => theme.id === currentTheme)?.classes || gradientThemes[0].classes;
   };
 
+  const re=useRef<HTMLInputElement>(null)
+if(!data){
+  return<>
+  
+  <div className='w-screen h-screen flex justify-center items-center'>
+    <ClipLoader></ClipLoader>
+  </div>
+  </>
+}
+
+else{
+
+
+
+
   return (
-    <div className={`min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] ${getCurrentThemeClasses()} py-8 px-4 transition-colors duration-500`}>
+    <div className={`${ data?.theme|| 'min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))]'} ${getCurrentThemeClasses()} py-8 px-4 h-screen transition-colors duration-500`}>
       <div className="max-w-lg mx-auto">
         {/* Theme Switcher */}
                 { EditMode&& <div className="absolute top-4 right-4">
-          <div className="relative">
+          <div className="relative flex-col items-center gap-3">
             <button
               onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
               className=" flex item-center gap-3 text-gray-600 md:text-xl bg-white/95 backdrop-blur-sm p-2 rounded-lg shadow-md hover:shadow-lg transition-all hover:scale-110 active:scale-95"
@@ -195,10 +211,12 @@ const ref = useRef<HTMLButtonElement|null>(null)
               Theme
               <Palette  className="text-gray-600" />
             </button>
+         <button onClick={()=> {setloader(true); axios.post(`http://localhost:3000/api/product?id=${hashedId}`,{theme:getCurrentThemeClasses()}).then(()=>{ setloader(false)})}} className='flex item-center gap-5 mt-4 text-left text-gray-600 md:text-xl bg-white/95 backdrop-blur-sm p-2 rounded-lg shadow-md hover:shadow-lg transition-all hover:scale-110 active:scale-95'>{loader?<><ClipLoader></ClipLoader></>:<>Save <FaSave></FaSave></>}</button>
             
             {isThemeMenuOpen && (
               <div className="absolute right-0 mt-2 w-48 z-20 bg-white rounded-lg shadow-lg overflow-hidden">
                 {gradientThemes.map(theme => (
+                  <div>
                   <button
                     key={theme.id}
                     onClick={() => {
@@ -208,9 +226,10 @@ const ref = useRef<HTMLButtonElement|null>(null)
                     className={`w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors ${
                       currentTheme === theme.id ? 'bg-gray-100' : ''
                     }`}
-                  >
+                    >
                     {theme.name}
                   </button>
+                    </div>
                 ))}
               </div>
             )}
@@ -288,12 +307,12 @@ const ref = useRef<HTMLButtonElement|null>(null)
       className="bg-gray-200 animate-pulse rounded-xl shadow-md h-24 w-full"
     ></div>
   ))
-) : data.length === 0 ? (
+) : data.productCards.length === 0 ? (
   // If data is empty, show "No links created yet"
   <p className="text-gray-500 text-center">No links created yet</p>
 ) : (
   // If data has elements, render product cards
-  data.map((product) => (
+  data.productCards.map((product) => (
     <a
       key={product.id}
       href={product.affiliateLink}
@@ -486,8 +505,17 @@ const ref = useRef<HTMLButtonElement|null>(null)
                       </label>
                      
                     </div>
-
-
+<input ref={re} onChange={(e)=>{ const file=e.target.files[0] 
+                                
+                                const formData = new FormData();
+                                formData.append('file', file);
+                                setloader(true); 
+                                axios.post('http://localhost:3000/api/upload',formData,
+                                 {headers: {
+                                  'Content-Type': 'multipart/form-data',
+                                },}
+                                ).then((res)=>{console.log(res.data); setimage(res.data.url); setloader(false)}) }} type="file" className="hidden" />
+<Button  onClick={()=>{re.current?.click()}}> {loader?<><ClipLoader color='#FFFFF'></ClipLoader></>:<><FaUpload></FaUpload>  Uplaod</>} </Button>
 
                          {/* Image Preview */}
                          <div className="mt-4">
@@ -495,7 +523,7 @@ const ref = useRef<HTMLButtonElement|null>(null)
                       <div className="w-full h-40 border rounded-lg overflow-hidden bg-gray-50">
                         {image.length>=0 ? (
                           <img
-                            
+                            src={image}
                             alt="Preview"
                             className="w-full h-full object-cover"
                           />
@@ -583,7 +611,7 @@ const ref = useRef<HTMLButtonElement|null>(null)
         </footer>
       </div>
     </div>
-  );
+  );}
 }
 
 export default Home;

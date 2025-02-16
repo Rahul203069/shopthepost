@@ -12,15 +12,14 @@ export async function GET(req: NextRequest) {
     const  url  =  req.url
    const hashedId=url.split("?")[1].split("=")[1];
 
-console.log(hashedId,'heheheh');
     // Validate hashedId
     if (!hashedId) {
       return NextResponse.json({ error: "Missing page ID" }, { status: 400 });
     }
 
     // Fetch the landing page
-    const page = await prisma.landingPage.findUnique({ where: { hashedId }, include: { productCards: true } });
-console.log(page)
+    const page = await prisma.landingPage.findUnique({ where: { hashedId }, include: { productCards: true ,user:true} });
+
     // Handle case where no page is found
     if (!page) {
       return NextResponse.json({ error: "Page not found" }, { status: 404 });

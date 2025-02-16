@@ -1,7 +1,7 @@
 
 //@ts-nocheck
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import {
   Edit2,
   Trash2,
@@ -9,9 +9,13 @@ import {
   BarChart,
   ArrowUp,
   ArrowDown,
+  Camera,
+  Instagram,
   Clock,
+  Save,
   User,
   Search,
+  Mail,
   Bell,
   Settings,
 } from "lucide-react";
@@ -144,6 +148,7 @@ const {data:session} = useSession()
   const [pages, setpages] = useState<Page[]>(null)
 const [description, setdescription] = useState('')
 const [open, setopen] = useState(false)
+const ref= useRef<HTMLInputElement>(null)
 const [delopen, setdelopen] = useState(false)
 const [loader, setloader] = useState(false)
 const router = useRouter()
@@ -182,9 +187,87 @@ axios.get('api/page').then((res)=>{setpages(res.data)})
                 <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
                 <span className="absolute inset-0 bg-gray-100 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
               </button>
-              <button className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 group">
+
+              <Dialog>
+  <DialogTrigger>
+  <button className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 group">
                 <Settings className="h-5 w-5 text-gray-600 group-hover:rotate-45 transition-transform duration-300" />
               </button>
+
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Profile</DialogTitle>
+      <DialogDescription>
+        This Profile imager and user name will be applied to all your landing pages.
+      </DialogDescription>
+    </DialogHeader>
+    <div className="space-y-4">
+    <div className="flex justify-center">
+            <div className="relative">
+              <img
+                src={'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150'}
+                alt="Profile"
+                className="w-24 h-24 rounded-full object-cover"
+              />
+                               <input  ref={ref} onChange={(e)=>{ const file=e.target.files[0]; 
+                                
+                                const formData = new FormData();
+                                formData.append('file', file);
+                                setloader(true); 
+                                axios.post('http://localhost:3000/api/upload',formData,
+                                 {headers: {
+                                  'Content-Type': 'multipart/form-data',
+                                },}
+                                ).than((res)=>{console.log(res.data); setloader(false)}) }} type="file" className="size-0 absolute bottom-0 right-0" />
+              {true && (
+                <button  onClick={()=>{ref.current?.click()}} className="absolute bottom-0 right-0 bg-indigo-600 p-2 rounded-full text-white hover:bg-indigo-700">
+{loader?<ClipLoader  size={15} color="#FFFFFF"></ClipLoader>:<Camera size={16} />}
+                 
+                </button>
+              )}
+            </div>
+          </div>
+              <div>
+               
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+              Instagram Username
+                </label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Instagram className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="email"
+                  
+                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+
+              <div className="flex space-x-3 mt-6">
+                <button
+               
+                  className="flex-1 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 flex items-center justify-center space-x-2"
+                >
+                  <Save size={16} />
+                  <span>Save Changes</span>
+                </button>
+                <button
+                
+                  className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+  </DialogContent>
+</Dialog>
+
+           
             </div>
           </div>
         </div>
